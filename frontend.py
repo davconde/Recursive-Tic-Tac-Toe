@@ -6,14 +6,16 @@ import random
 
 windowsize = 729
 depth = int(input("Enter game depth: "))
+n_players = int(input("Enter 2 or 3 players: "))
 drawtiesymbols = True
 drawtieshading = True
 drawtopboard = True
 XCOLOR = "red"
 OCOLOR = "blue"
+TCOLOR = "green"
 TIECOLOR = "medium sea green"
 TIESHADING = "black"
-gameboard = TicTacToe(depth)
+gameboard = TicTacToe(depth, n_players)
 
 
 cordtopos = gameboard.conversions
@@ -30,7 +32,7 @@ canvas.pack()
 
 win.resizable(width=0, height=0)
 
-win.winfo_toplevel().title("TicTacToe (Depth = "+str(depth)+")")
+win.winfo_toplevel().title("TicTacToe (Depth = "+str(depth)+" Players = "+str(n_players)+")")
 
 images = []
 
@@ -70,6 +72,12 @@ def drawo(x, y, size, w):
     canvas.create_oval(x, y, x + size, y + size, outline=OCOLOR, width=w)
 
 
+def drawt(x, y, size, w):
+
+    create_rectangle(x, y, x + size, y + size, fill="", outline=TCOLOR, width=w)
+    canvas.create_polygon(x + size / 2, y, x + size, y + size, x, y + size, outline=TCOLOR, fill="", width=w)
+
+
 def drawtie(x, y, size, w):
     canvas.create_rectangle(
         x, y, x + size, y + size, outline=TIECOLOR, width=w
@@ -78,7 +86,7 @@ def drawtie(x, y, size, w):
 
 def drawboard(
     game, x, y, size
-):  # game parameter is used to pass in the tic tac toe object to retrieve x and o values
+):  # game parameter is used to pass in the tic tac toe object to retrieve x, o and t values
     w = game.depth*2+1
     if game.depth != 0:
         dif = size / 3
@@ -108,6 +116,10 @@ def drawboard(
 
             color = OCOLOR
 
+        elif game.state == -2:
+
+            color = TCOLOR
+
         elif game.isresolved == True:
 
             color = TIESHADING
@@ -135,6 +147,10 @@ def drawboard(
         elif game.state == -1:
 
             drawo(x + size * 0.1, y + size * 0.1, size * 0.8, symbolwidth)
+
+        elif game.state == -2:
+            
+            drawt(x + size * 0.1, y + size * 0.1, size * 0.8, symbolwidth)
 
         elif game.state == 2 and drawtiesymbols:
 

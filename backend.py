@@ -12,7 +12,7 @@ winlines = (
     (0, 4, 8),
     (2, 4, 6),
 )
-symboldict = {-1: "O", 1: "X", 0: "·", 2: "No one!"}
+symboldict = {-1: "O", 1: "X", -2: "T", 0: "·", 2: "No one!"}
 cantiewin = False
 
 def gridtoposcalc(depth):
@@ -35,7 +35,7 @@ def gridtoposcalc(depth):
     return grid
 
 
-class Piece:  # Represents X or O
+class Piece:  # Represents X, O or T
     def __init__(self, player):
         self.state = player
         self.depth = 0
@@ -107,12 +107,13 @@ class GameBoard:  # Represents A Tic Tac Toe Board
 
 
 class TicTacToe:
-    def __init__(self, depth=1):
+    def __init__(self, depth=1, n_players=2):
         self.game = GameBoard(depth, False, True)
-        self.turn = 1  # Convention is that X goes first
+        self.turn = -1  # Convention is that O goes first
         self.movezone = ()
         self.conversions = gridtoposcalc(depth)
         self.depth = depth
+        self.n_players = n_players
 
     def move(self, *positions):
         if not (
@@ -131,7 +132,14 @@ class TicTacToe:
 
         deeppos.state = self.turn
         self.locate(*self.movezone).ismovezone = False
-        self.turn *= -1
+        if self.n_players == 2:
+            self.turn *= -1
+        elif self.turn == -1:
+            self.turn = 1
+        elif self.turn == 1:
+            self.turn = -2
+        else:
+            self.turn = -1
 
         if self.depth > 1:
             self.locate(*positions[0 : len(positions) - 1]).checkwin()
