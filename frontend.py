@@ -7,6 +7,8 @@ import random
 windowsize = 729
 depth = int(input("Enter game depth: "))
 n_players = int(input("Enter 2 or 3 players: "))
+while n_players != 2 and n_players != 3:
+    n_players = int(input("Enter 2 or 3 players: "))
 drawtiesymbols = True
 drawtieshading = True
 drawtopboard = True
